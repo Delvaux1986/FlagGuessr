@@ -1,0 +1,128 @@
+/* SELECTER BALISE */
+
+footer {
+  position: absolute;
+  bottom: 0px;
+  text-align: center;
+  margin-left: auto;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+form input {
+  margin-top: 2em;
+}
+ul > li {
+  display: none;
+}
+/* SELECT CLASS */
+
+.logo {
+  display: flex;
+  width: 150;
+  height: 100px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+.background {
+  z-index: -1;
+  opacity: 0.4;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.gameSettings {
+  background-color: rgba(128, 128, 128, 0.219);
+  border-radius: 15px;
+  padding: 20px 20px;
+  font-weight: 600;
+}
+.buttonPlay{
+    background-color: rgb(1, 53, 24);
+    color:white;
+    font-size: 20px;
+    width: 75px;
+    height:37.5px;
+}
+.buttonPlay:hover{
+    background-color: white;
+    color : rgb(1, 53, 24);
+}
+.scoreBoardFinal {
+  background-color: rgba(128, 128, 128, 0.329);
+  display: flex;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  padding: 20px 20px;
+  font-weight: 600;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.correctAnswer {
+  display: flex;
+  width: 400px;
+  height: 75px;
+  border-radius: 15px;
+  background-color: rgba(207, 35, 35, 0.418);
+  color: black;
+  justify-content: center;
+  align-items: center;
+}
+.wrongAnswer {
+  display: flex;
+  justify-content: center;
+  border-radius: 15px;
+  align-items: center;
+  width: 400px;
+  height: 75px;
+  background-color: rgba(1, 53, 24, 0.4);
+  color: black;
+}
+.score {
+  font-size: 25px;
+}
+
+.map {
+  height: 80vh;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ol-rotate-reset {
+  display: none;
+}
+.ol-attribution {
+  display: none;
+}
+/* SELECTERS ID's */
+#success {
+  color: rgb(87, 128, 27);
+  background-color: rgba(87, 128, 27, 0.3);
+}
+#checkAnswer {
+  background-color: rgb(1, 53, 24);
+  color: white;
+  border: none;
+  width: 75px;
+  height:37.5px;
+  align-items: center;
+  justify-content: center;
+  display: none;
+  position: relative;
+  right: 0;
+  bottom: 0;
+}
