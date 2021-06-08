@@ -19,10 +19,14 @@
 </template>
 
 <script>
+import firebase from "../firebaseInit"
+const db = firebase.firestore();
+
 export default {
   props: {
     scoreBoard: Object,
     scoreMax: String,
+    playerName: String,
   },
   data() {
     return {};
@@ -39,8 +43,19 @@ export default {
           trueResponse++;
         }
       }
+      this.createScoreMonde(this.playerName, trueResponse, this.scoreMax)
       return trueResponse;
     },
+     createScoreMonde(name, score ,scoreMax) {
+        db.collection("scoreMonde")
+          .add({ name: name , score :score , scoreMax: scoreMax})
+          .then(() => {
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+    }
   },
 };
 </script>

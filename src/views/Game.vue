@@ -24,13 +24,12 @@
         id="numberOfRound"
         v-model="form.numberOfRound"
       >
-        <option value=5 >5</option>
+        <option value="5">5</option>
         <option value="10">10</option>
         <option value="15">15</option>
-        <option value="20">20</option>
-        </select
+        <option value="20">20</option></select
       ><br />
-      <input type="submit" value="Play" class="buttonPlay"/>
+      <input type="submit" value="Play" class="buttonPlay" />
     </form>
     <World
       v-if="this.gameScoreBord.isSettings === true"
@@ -43,6 +42,7 @@
     <ScoreBoard
       :scoreBoard="this.gameScoreBord.answers"
       :scoreMax="this.gameScoreBord.roundSelected"
+      :playerName="this.form.playerName"
       v-if="this.gameScoreBord.isFinish"
     ></ScoreBoard>
   </div>
@@ -69,7 +69,7 @@ export default {
       result: [],
       gameScoreBord: {
         isSettings: false,
-        isRunning : false,
+        isRunning: false,
         isFinish: false,
         roundSelected: 0,
         current: 1,
