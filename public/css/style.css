@@ -133,3 +133,87 @@ ul > li {
   right: 0;
   bottom: 0;
 }
+
+/* CREDIT SECTION */
+.credits{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.flag {
+  position: relative;
+  height: 30vh;
+  width: 50vh;
+  
+  background-color: rgba(128, 128, 128, 0.329);
+  
+  border: 3px solid RGB(33,30,184);
+  
+  -webkit-box-shadow: 0 0 2px 2px rgba(20,20,20,.1);
+}
+
+.flagwave {
+  position: absolute;
+  
+  top: -3px;
+  left: -3px;
+  
+  width: 50vh;
+  height: 30vh;
+  
+  z-index: 2;
+
+  background-image: 
+      
+      -webkit-gradient(
+          linear, 
+          0% 30%, 
+          50% top, 
+          color-stop(0%,rgba(33, 30, 184, 0)), 
+          color-stop(40%,rgba(33, 30, 184,0)), 
+          color-stop(90%,rgba(33, 30, 184,.3)), 
+          color-stop(100%,rgba(33, 30, 184,0))),
+      
+      -webkit-gradient(
+          linear, 
+          50% 30%, 
+          100% top, 
+          color-stop(0%,rgba(33, 30, 184, 0)), 
+          color-stop(40%,rgba(33, 30, 184,0)), 
+          color-stop(90%,rgba(33, 30, 184,.3)), 
+          color-stop(100%,rgba(33, 30, 184,0)),
+          color-stop(100%,rgba(33,30,184,0)));
+  
+  background-size: 200%;
+  background-position: right;
+  
+  -webkit-animation-name: flagwave;
+  -webkit-animation-duration: 15s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+
+  @-webkit-keyframes flagwave {
+  
+      0% {
+          background-position: -400px 0px, -400px 0px, -400px 0px,-400px 0px;
+      }
+  
+      100% {
+          background-position: 800px 0px, 800px 0px, 800px 0px, 800px 0px;
+      }
+  }
+
+  div.flagtxt {
+      position: relative;
+      display: block;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      
+      font-size: 1em;
+      line-height: 1.9em;
+  }
+  
+ 

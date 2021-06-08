@@ -47,7 +47,6 @@ export default {
                     
                 });
                 this.scoreData = data
-                console.log(this.scoreData)
                 })
                 .catch((error) => {
                 console.log("Error getting documents: ", error);
