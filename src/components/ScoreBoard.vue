@@ -6,14 +6,6 @@
         Vous avez obtenu :
         <span class="score">{{ displayScore() }} / {{ this.scoreMax }}</span>
       </p>
-      <div v-for="(key, value) in this.scoreBoard" :key="key">
-        <div v-if="key === true" class="wrongAnswer">
-          {{ value }} : {{ key ? "Correct" : "Pas correct !!!" }}
-        </div>
-        <div v-else class="correctAnswer">
-          {{ value }} : {{ key ? "Correct" : "Pas correct !!!" }}
-        </div>
-      </div>
     </div>
   </div>
 </template>

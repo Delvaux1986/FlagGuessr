@@ -1,20 +1,31 @@
 <template>
   <div class="map">
-    {{ country ? country.translations.fr : "" }}
-    <p id="success"></p>
+    <div v-if="this.scoreBoard.modeSelected === 'locateByName'">
+    Situer : {{ country ? country.translations.fr : "" }}
+    </div>
+    <div v-if="this.scoreBoard.modeSelected === 'locateByFlag'">
+      Situer : <img :src="country.flag" width="200px" height="125px"/>
+    </div>
+    <p id="returnAnswer"></p>
+    
     <vl-map
       ref="map"
       :load-tiles-while-animating="true"
       :load-tiles-while-interacting="true"
-      style="height: 600px"
+      class="vl-map"
       @click="onMapClick"
     >
-      <vl-view :zoom.sync="zoom" :center.sync="center"> </vl-view>
+      <vl-view
+        :center.sync="center"
+        :zoom.sync="zoom"
+        :rotation.sync="rotation"
+      >
+      </vl-view>
       <vl-overlay></vl-overlay>
       <!-- <vl-layer-tile id="osm">
         <vl-source-osm></vl-source-osm>
       </vl-layer-tile> -->
-      <vl-layer-vector-tile ref="vtLayer" :declutter="true">
+      <vl-layer-vector-tile ref="vtLayer" :declutter="false">
         <vl-source-vector-tile
           :format-factory="vtFormatFactory"
           :url="vtUrl"
@@ -22,7 +33,8 @@
         <vl-style-func :factory="vtStyleFuncFactory"></vl-style-func>
       </vl-layer-vector-tile>
     </vl-map>
-    <button @click="checkAnswer" id="checkAnswer">></button>
+    <button @click="nextQuestion" id="nextQuestion">Suivant</button>    
+    <button v-if="!this.answerGive" @click="checkAnswer" id="checkAnswer">></button>
   </div>
 </template>
 
@@ -30,8 +42,11 @@
 import MVT from "ol/format/MVT";
 import { Fill, Stroke, Style } from "ol/style";
 import axios from "axios";
+import "ol/ol.css";
 
 export default {
+  components: {
+  },
   props: {
     scoreBoard: Object,
     current: Number,
@@ -52,86 +67,153 @@ export default {
       country: {},
       proposition: "",
       answerToCompare: "",
+      answerGive : false,
     };
   },
-  mounted() {
-    this.getData();
+  beforeCreate() {
+    axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
+      let randNumber = Math.floor(Math.random() * 250);
+      this.country = response.data[randNumber];
+    });
   },
+
   methods: {
-    getData() {
-      axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
-        let randNumber = Math.floor(Math.random() * 250);
-        this.country = response.data[randNumber];
-      });
-    },
     vtFormatFactory() {
-      return new MVT();
+      let mvt = new MVT();
+      return mvt;
     },
     vtStyleFuncFactory() {
       return (feature) => {
         let selected = !!this.vtSelection[feature.get(this.vtIdProp)];
-
         return [
           new Style({
             stroke: new Stroke({
-              color: selected ? "rgba(200,20,20,0.8)" : "gray",
+              color: selected ? "white" : "white",
               width: selected ? 2 : 1,
             }),
             fill: new Fill({
-              color: selected ? "rgba(200,20,20,0.2)" : "rgba(20,20,20,0.9)",
+              color: selected ? '#133553' : "#74ACDE",
             }),
           }),
         ];
       };
     },
     onMapClick(evt) {
-      let correctAnswer = this.country;
-      let features = this.$refs.map.$map.getFeaturesAtPixel(evt.pixel);
-      if (!features) {
-        this.vtSelection = {};
+      
+        let correctAnswer = this.country;
+        let features = this.$refs.map.$map.getFeaturesAtPixel(evt.pixel);
+        if (!features) {
+          this.vtSelection = {};
+          // force redraw of layer style
+          this.$refs.vtLayer.refresh();
+          return;
+        }
+        let feature = features[0];
+        let fid = feature.get(this.vtIdProp);
+  
+        if (this.vtSelectMode === "single") {
+          this.vtSelection = {};
+        }
+        // add selected feature to lookup
+        this.vtSelection[fid] = feature;
+        // HERE PUT LOGIK FOR CHECK IF ITS THE GOOD COUNTRY
+        for (const key of Object.keys(this.vtSelection)) {
+          this.proposition = key;
+        }
+        for (const [key, value] of Object.entries(correctAnswer)) {
+          if (key === "alpha3Code") {
+            this.answerToCompare = value;
+          }
+        }
+        if (this.vtSelection) {
+          document.getElementById("checkAnswer").style.display = "inline-flex";
+        }
+  
         // force redraw of layer style
         this.$refs.vtLayer.refresh();
-        return;
-      }
-      let feature = features[0];
-      let fid = feature.get(this.vtIdProp);
-
-      if (this.vtSelectMode === "single") {
-        this.vtSelection = {};
-      }
-      // add selected feature to lookup
-      this.vtSelection[fid] = feature;
-      // HERE PUT LOGIK FOR CHECK IF ITS THE GOOD COUNTRY
-      for (const key of Object.keys(this.vtSelection)) {
-        this.proposition = key;
-      }
-      for (const [key, value] of Object.entries(correctAnswer)) {
-        if (key === "alpha3Code") {
-          this.answerToCompare = value;
-        }
-      }
-      if (this.vtSelection) {
-        document.getElementById("checkAnswer").style.display = "inline-flex";
-      }
-
-      // force redraw of layer style
-      this.$refs.vtLayer.refresh();
+      
     },
     checkAnswer() {
       if (this.proposition === this.answerToCompare) {
-        document.getElementById("success").innerText =
-          "Bravo la réponse est Correct !!!";
         this.scoreBoard["answers"][this.current] = true;
+        this.answerGive = true;
+        document.getElementById('returnAnswer').style.color = 'green';
+        document.getElementById('returnAnswer').innerText = 'Correct'
+        document.getElementById("checkAnswer").style.display = "none";
+        document.getElementById("nextQuestion").style.display = "inline-flex";
 
-        this.nextQuestion();
+        
       } else {
         this.scoreBoard["answers"][this.current] = false;
-        this.nextQuestion();
+        this.answerGive = true;
+        document.getElementById('returnAnswer').style.color = 'red';
+        document.getElementById('returnAnswer').innerText = 'Faux'
+        document.getElementById("checkAnswer").style.display = "none";
+        document.getElementById("nextQuestion").style.display = "inline-flex";
+
+        
+
       }
+      
     },
     nextQuestion() {
       this.$emit("nextQuestion", this.scoreBoard);
-      console.log(this.scoreBoard);
+    },
+    randomColor() {
+      let randNumber = Math.floor(Math.random() * 38);
+      var colorArray = [
+        "#FF6633",
+        "#FFB399",
+        "#FF33FF",
+        "#FFFF99",
+        "#00B3E6",
+        "#E6B333",
+        "#3366E6",
+        "#999966",
+        "#99FF99",
+        "#B34D4D",
+        "#80B300",
+        "#809900",
+        "#E6B3B3",
+        "#6680B3",
+        "#66991A",
+        "#FF99E6",
+        "#CCFF1A",
+        "#FF1A66",
+        "#E6331A",
+        "#33FFCC",
+        "#66994D",
+        "#B366CC",
+        "#4D8000",
+        "#B33300",
+        "#CC80CC",
+        "#66664D",
+        "#991AFF",
+        "#E666FF",
+        "#4DB3FF",
+        "#1AB399",
+        "#E666B3",
+        "#33991A",
+        "#CC9999",
+        "#B3B31A",
+        "#00E680",
+        "#4D8066",
+        "#809980",
+        "#E6FF80",
+        "#1AFF33",
+        "#999933",
+        "#FF3380",
+        "#CCCC00",
+        "#66E64D",
+        "#4D80CC",
+        "#9900B3",
+        "#E64D66",
+        "#4DB380",
+        "#FF4D4D",
+        "#99E6E6",
+        "#6666FF",
+      ];
+      return colorArray[randNumber];
     },
   },
   beforeDestroy() {

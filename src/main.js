@@ -9,7 +9,7 @@ import { SelectInteraction } from 'vuelayers'
 Vue.config.productionTip = false
 Vue.use(VueLayers, {
   // global data projection, see https://vuelayers.github.io/#/quickstart?id=global-data-projection
-  // dataProjection: 'EPSG:4326',
+  dataProjection: 'EPSG:4326',
 })
 Vue.use(SelectInteraction)
 new Vue({
