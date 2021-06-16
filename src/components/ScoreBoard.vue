@@ -28,26 +28,7 @@ export default {
     console.log(this.scoreBoard);
   },
   methods: {
-    displayScore() {
-      let trueResponse = 0;
-      for (const value of Object.values(this.scoreBoard)) {
-        if (value === true) {
-          trueResponse++;
-        }
-      }
-      this.createScoreMonde(this.playerName, trueResponse, this.scoreMax)
-      return trueResponse;
-    },
-     createScoreMonde(name, score ,scoreMax) {
-        db.collection("scoreMonde")
-          .add({ name: name , score :score , scoreMax: scoreMax})
-          .then(() => {
-            console.log("Document successfully written!");
-          })
-          .catch((error) => {
-            console.error("Error writing document: ", error);
-          });
-    }
+    
   },
 };
 </script>

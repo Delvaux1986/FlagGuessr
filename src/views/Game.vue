@@ -1,13 +1,13 @@
 <template>
   <div class="game">
-    <Response
+    <Modal
       v-show="this.isModalVisible"
       :scoreBoard="this.gameScoreBord"
       :key="this.gameScoreBord.isFinish"
       @closeScoreBoardFinal="resetGame()"
     >
-    </Response>
-    <Logo v-if="this.gameScoreBord.isFinish"></Logo>
+    </Modal>
+    <Logo v-if="!this.gameScoreBord.isRunning"></Logo>
     <img
       src="@/assets/backgroundMenu.jpg"
       alt="background"
@@ -70,7 +70,7 @@
 
 
 <script>
-import Response from "../components/Reponse.vue";
+import Modal from "../components/Modal.vue";
 import World from "../components/World.vue";
 import Logo from "../components/Logo.vue";
 import firebase from "../firebaseInit";
@@ -80,7 +80,7 @@ export default {
   components: {
     Logo,
     World,
-    Response,
+    Modal,
   },
   props: {},
   data() {
