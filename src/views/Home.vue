@@ -20,5 +20,11 @@ export default {
 }
 </script>
 
+<style>
+  main{
+    background: blue;
+  }
+</style>
+
 
 
